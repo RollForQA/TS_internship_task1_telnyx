@@ -1,0 +1,25 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          # Use the custom config file as per requirements
+          command: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }} --config-file cypress.config.custom.js
+        env:
+          # Pass the record key from GitHub secrets
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass GITHUB_TOKEN to allow GHA to publish comments with performance metrics
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

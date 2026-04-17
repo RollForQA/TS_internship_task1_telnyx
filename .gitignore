@@ -1,0 +1,7 @@
+node_modules
+cypress/screenshots
+cypress/videos
+.DS_Store
+package-lock.json
+*.xlsx
+read_tc.js

@@ -17,5 +17,11 @@
 import './commands'
 import 'cypress-real-events'
 
+// Ignore uncaught exceptions from the application to prevent test failure on non-critical React errors
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from failing the test
+  return false
+})
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

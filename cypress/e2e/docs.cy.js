@@ -1,16 +1,24 @@
 describe('Developer Documentation Tests', () => {
   it('TC-09: Developer Docs Search', () => {
+    // 1. Visit
     cy.visit('https://developers.telnyx.com');
-    // Using a more robust way to find the search trigger
-    cy.get('body').then(($body) => {
-        if ($body.find('input#search-input').length > 0) {
-            cy.get('input#search-input').type('Send a message{enter}', {force: true});
-        } else {
-            // Fallback to searching for the search button/icon
-            cy.get('button').contains(/Search|Find/i).first().click({force: true});
-            cy.get('input').first().type('Send a message{enter}', {force: true});
-        }
-    });
-    cy.get('body').should('contain', 'Send a message');
+    // Mintlify is heavy, let's wait for the search bar to be fully initialized
+    cy.get('#search-bar-entry').should('be.visible');
+
+    // 2. Open search
+    cy.get('#search-bar-entry > .flex-1').click({ force: true });
+
+    // 3. Type and wait for results to stabilize
+    cy.get('input[placeholder*="Search"]').should('be.visible').type('Send a message', { force: true });
+
+    // 4. Click the actual link inside the results
+    // We target the link to ensure navigation happens
+    cy.get('[role="listbox"]').should('be.visible');
+    cy.contains('[role="option"]', 'Send a message').should('be.visible').click({ force: true });
+
+    // 5. Verify navigation
+    // Sometimes it takes a moment for the SPA to transition
+    cy.url().should('include', '/messages');
+    cy.get('h1').should('contain', 'Send a message');
   });
 });

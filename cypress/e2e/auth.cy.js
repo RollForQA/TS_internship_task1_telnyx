@@ -13,10 +13,13 @@ describe('Authentication Tests', () => {
 
   it('TC-04: Log In Empty Submit', () => {
     cy.visit('https://portal.telnyx.com/');
-    cy.get('form').should('be.visible');
-    // Find the login/submit button
-    cy.get('button[type="submit"]').first().click();
-    // Check for "Email is required" error
+    // Wait for the login card to be visible
+    cy.contains('h1', 'Welcome Back').should('be.visible');
+    
+    // Click exactly on the "Send me sign-in link" button
+    cy.contains('button', 'Send me sign-in link').should('be.visible').click({force: true});
+    
+    // Check for the error message "Email is required" in the toast/popup
     cy.get('body').should('contain', 'Email is required');
   });
 });

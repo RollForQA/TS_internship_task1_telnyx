@@ -13,13 +13,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          # Use the custom config file as per requirements
-          command: npx cypress run --record --key ${{ secrets.CYPRESS_RECORD_KEY }} --config-file cypress.config.custom.js
+          browser: chrome
+          config-file: cypress.config.custom.js
+          record: true
         env:
-          # Pass the record key from GitHub secrets
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Recommended: pass GITHUB_TOKEN to allow GHA to publish comments with performance metrics
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge mochawesome reports
+        if: always()
+        run: |
+          npx mochawesome-merge cypress/reports/*.json -o cypress/reports/merged.json || true
+          npx marge cypress/reports/merged.json -f report -o cypress/reports/html || true
+
+      - name: Upload mochawesome report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mochawesome-report
+          path: cypress/reports/html
+          if-no-files-found: ignore
+
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          if-no-files-found: ignore

@@ -1,0 +1,24 @@
+{
+  "email": {
+    "valid": "testuser@example.com",
+    "invalid": "invalid-email-format",
+    "empty": ""
+  },
+  "urls": {
+    "home": "/",
+    "signUp": "/sign-up",
+    "pricingMessaging": "/pricing/messaging",
+    "pricingElasticSip": "/pricing/elastic-sip",
+    "portal": "https://portal.telnyx.com/",
+    "devDocs": "https://developers.telnyx.com"
+  },
+  "viewport": {
+    "desktop": { "width": 1280, "height": 720 },
+    "mobile": { "width": 375, "height": 812 }
+  },
+  "selectors": {
+    "cookieBanner": "#onetrust-banner-sdk",
+    "cookieAcceptBtn": "#onetrust-accept-btn-handler",
+    "mainMenu": "#main-menu"
+  }
+}

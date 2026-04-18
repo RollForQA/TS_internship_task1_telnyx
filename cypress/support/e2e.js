@@ -1,27 +1,17 @@
 // ***********************************************************
-// This example support/e2e.js is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
+// This support/e2e.js is processed and loaded automatically
+// before your test files.
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import './commands'
-import 'cypress-real-events'
+// Import custom commands
+import './commands';
 
-// Ignore uncaught exceptions from the application to prevent test failure on non-critical React errors
+// Register @cypress/grep for test tagging (@smoke, @regression)
+import { register as registerCypressGrep } from '@cypress/grep';
+registerCypressGrep();
+
+// Ignore uncaught exceptions from the application to prevent
+// test failure on non-critical React/Next.js hydration errors
 Cypress.on('uncaught:exception', (err, runnable) => {
-  // returning false here prevents Cypress from failing the test
-  return false
-})
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+  return false;
+});

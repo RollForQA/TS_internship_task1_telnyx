@@ -2,10 +2,12 @@
 node_modules
 cypress/screenshots
 cypress/videos
+cypress/reports
 .DS_Store
 package-lock.json
-*.xlsx
+TC_Telnyx_TestPlan.md
 read_tc.js
+generate-test-plan.js
 
 # Logs
 logs

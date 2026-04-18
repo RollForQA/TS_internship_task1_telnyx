@@ -16,12 +16,17 @@
     "report": "npm run report:merge && npm run report:generate",
     "test": "cypress run --config-file cypress.config.custom.js"
   },
-  "keywords": ["cypress", "telnyx", "e2e", "testing"],
+  "keywords": [
+    "cypress",
+    "telnyx",
+    "e2e",
+    "testing"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@cypress/grep": "^4.3.0",
+    "@cypress/grep": "^6.0.0",
     "cypress": "^15.14.0",
     "exceljs": "^4.4.0",
     "mochawesome": "^7.1.3",

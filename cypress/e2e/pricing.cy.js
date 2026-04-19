@@ -5,7 +5,7 @@ describe('Pricing Page Tests', () => {
     cy.assertSiteIsUp('https://telnyx.com');
   });
 
-  it('TC-05: Messaging Pricing Page Content', { tags: '@regression' }, () => {
+  it('TC-05: Messaging Pricing Page Content', { tags: '@smoke' }, () => {
     // Step 1: Navigate to messaging pricing page
     pricingPage.visitMessaging();
 
@@ -23,7 +23,7 @@ describe('Pricing Page Tests', () => {
     pricingPage.assertPricingRowNotContains('Send outbound messages', '$0.004 per message part +');
   });
 
-  it('TC-06: SIP Trunking Pricing Page Content', { tags: '@regression' }, () => {
+  it('TC-06: SIP Trunking Pricing Page Content', { tags: '@smoke' }, () => {
     // Step 1: Navigate to SIP trunking pricing page
     pricingPage.visitElasticSip();
 

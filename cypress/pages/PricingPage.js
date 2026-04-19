@@ -4,16 +4,11 @@
 
 class PricingPage {
   // ---- Selectors ----
-  get pageHeading()  { return cy.get('h1, h2').first(); }
-  get payAsYouGo()   { return cy.contains('Pay as you go'); }
-  get volumeBased()  { return cy.contains('Volume-based'); }
-
-  signUpCta() {
-    return cy.contains('a', 'Sign up');
-  }
-  talkToExpertCta() {
-    return cy.contains('Talk to an expert');
-  }
+  get pageHeading() { return cy.get('h1, h2').first(); }
+  get payAsYouGo() { return cy.contains('Pay as you go'); }
+  get volumeBased() { return cy.contains('Volume-based'); }
+  get countryFilter() { return cy.get('#country-filter'); }
+  get currencyFilter() { return cy.get('#currency-filter'); }
 
   // ---- Actions ----
   visitMessaging() {
@@ -30,12 +25,61 @@ class PricingPage {
     return this;
   }
 
-  assertHasPricingContent(keywords = ['$', 'per message', 'Pay as you go', 'pricing']) {
-    cy.get('body').then(($body) => {
-      const text = $body.text();
-      const hasPricing = keywords.some((kw) => text.includes(kw));
-      expect(hasPricing, 'Page should display pricing information').to.be.true;
-    });
+  selectCountry(countryName) {
+    this.countryFilter.should('be.visible').click();
+    cy.contains('[role="option"]', new RegExp(`^${countryName}$`)).click();
+    this.countryFilter.should('contain', countryName);
+    return this;
+  }
+
+  selectCurrency(currencyCode) {
+    this.currencyFilter.should('be.visible').click();
+    cy.contains('[role="option"]', new RegExp(`^${currencyCode}$`)).click();
+    this.currencyFilter.should('contain', currencyCode);
+    return this;
+  }
+
+  pricingRow(label) {
+    return cy.contains(new RegExp(`^${label}$`)).closest('div.grid');
+  }
+
+  priceValueFor(label) {
+    return cy.contains('span', label)
+      .closest('div.grid')
+      .find('div.bg-transparent')
+      .first();
+  }
+
+  assertPricingRowContains(label, expectedText) {
+    this.pricingRow(label)
+      .should('be.visible')
+      .should(($row) => {
+        const text = $row.text().replace(/\s+/g, ' ').trim();
+        expect(text, `${label} row should include ${expectedText}`).to.include(expectedText);
+      });
+
+    return this;
+  }
+
+  assertPricingRowNotContains(label, unexpectedText) {
+    this.pricingRow(label)
+      .should('be.visible')
+      .should(($row) => {
+        const text = $row.text().replace(/\s+/g, ' ').trim();
+        expect(text, `${label} row should not include ${unexpectedText}`).not.to.include(unexpectedText);
+      });
+
+    return this;
+  }
+
+  assertPriceUsesCurrency(label, symbol) {
+    this.priceValueFor(label)
+      .should('be.visible')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim(), `${label} price should use ${symbol}`).to.include(symbol);
+      });
+
     return this;
   }
 }

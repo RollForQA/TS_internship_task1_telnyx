@@ -13,14 +13,14 @@ describe('Pricing Page Tests', () => {
     pricingPage.pageHeading.should('be.visible');
     cy.title().should('contain', 'Pricing');
 
-    // Step 3: Verify pricing content is displayed ($ amounts or pricing keywords)
-    pricingPage.assertHasPricingContent(['$', 'per message', 'Pay as you go', 'pricing']);
+    // Step 3: Verify prices are shown for the United States by default
+    pricingPage.countryFilter.should('contain', 'United States');
+    pricingPage.assertPricingRowContains('Send outbound messages', '$0.004 per message part +');
 
-    // Step 4: Verify "Pay as you go" section exists
-    pricingPage.payAsYouGo.should('be.visible');
-
-    // Step 5: Verify "Sign up" CTA is present
-    pricingPage.signUpCta().should('exist');
+    // Step 4: Change country to United Kingdom and verify prices update
+    pricingPage.selectCountry('United Kingdom');
+    pricingPage.assertPricingRowContains('Send outbound messages', '$0.055 per message part');
+    pricingPage.assertPricingRowNotContains('Send outbound messages', '$0.004 per message part +');
   });
 
   it('TC-06: SIP Trunking Pricing Page Content', { tags: '@regression' }, () => {
@@ -37,10 +37,12 @@ describe('Pricing Page Tests', () => {
     // Step 4: Verify volume-based pricing section exists
     pricingPage.volumeBased.should('be.visible');
 
-    // Step 5: Verify the page contains price information
-    pricingPage.assertHasPricingContent(['$', 'per minute', 'per channel']);
+    // Step 5: Verify prices are shown in USD by default
+    pricingPage.currencyFilter.should('contain', 'USD');
+    pricingPage.assertPriceUsesCurrency('International calls', '$');
 
-    // Step 6: Verify "Talk to an expert" CTA exists
-    pricingPage.talkToExpertCta().should('exist');
+    // Step 6: Change currency to EUR and verify prices update
+    pricingPage.selectCurrency('EUR');
+    pricingPage.assertPriceUsesCurrency('International calls', '€');
   });
 });

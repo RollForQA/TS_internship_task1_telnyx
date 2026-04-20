@@ -11,7 +11,7 @@
     "cy:run:ci": "cypress run --config-file cypress.config.custom.js --browser chrome",
     "cy:run:smoke": "cypress run --config-file cypress.config.custom.js --env grepTags=@smoke",
     "cy:run:regression": "cypress run --config-file cypress.config.custom.js --env grepTags=@regression",
-    "report:merge": "npx mochawesome-merge cypress/reports/*.json -o cypress/reports/merged.json",
+    "report:merge": "npx mochawesome-merge cypress/reports/mochawesome*.json -o cypress/reports/merged.json",
     "report:generate": "npx marge cypress/reports/merged.json -f report -o cypress/reports/html",
     "report": "npm run report:merge && npm run report:generate",
     "test": "cypress run --config-file cypress.config.custom.js"

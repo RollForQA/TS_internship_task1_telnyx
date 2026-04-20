@@ -1,0 +1,24 @@
+{
+  "name": "telnyx-more",
+  "version": "1.0.0",
+  "description": "Separate Cypress subproject for Telnyx.com responsive and UI coverage",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "cy:open": "node_modules\\.bin\\cypress.cmd open --config-file cypress.config.js",
+    "cy:run": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome",
+    "cy:run:smoke": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome --env grepTags=@smoke",
+    "cy:run:regression": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome --env grepTags=@regression",
+    "report:merge": "node_modules\\.bin\\mochawesome-merge.cmd cypress/reports/mochawesome*.json -o cypress/reports/merged.json",
+    "report:generate": "node_modules\\.bin\\marge.cmd cypress/reports/merged.json -f report -o cypress/reports/html",
+    "report": "npm run report:merge && npm run report:generate",
+    "test": "cypress run --config-file cypress.config.js --browser chrome"
+  },
+  "devDependencies": {
+    "@cypress/grep": "^6.0.0",
+    "cypress": "^15.14.0",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
+  }
+}

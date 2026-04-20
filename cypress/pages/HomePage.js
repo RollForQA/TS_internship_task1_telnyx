@@ -21,11 +21,6 @@ class HomePage {
     return this;
   }
 
-  acceptCookies() {
-    cy.acceptCookies();
-    return this;
-  }
-
   scrollToFooter() {
     this.footer.scrollIntoView();
     return this;

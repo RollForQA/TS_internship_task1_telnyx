@@ -5,24 +5,20 @@ describe('Developer Documentation Tests', () => {
     cy.assertSiteIsUp('https://developers.telnyx.com');
   });
 
-  it('TC-09: Developer Docs Page & Navigation', { tags: '@regression' }, () => {
+  it('TC-09: Search the Developer Portal', { tags: '@regression' }, () => {
+    const query = 'Send a message';
+
     // Step 1: Navigate to developer documentation
     docsPage.visit();
 
-    // Step 2: Verify the docs page loads with proper title
-    cy.title().should('not.be.empty');
-    cy.get('body').should('be.visible');
+    // Step 2: Open search and enter the query
+    docsPage.openSearch();
+    docsPage.fillSearch(query);
 
-    // Step 3: Verify key documentation sections are present
-    cy.contains('Development').should('exist');
+    // Step 3–4: Verify search results are shown and URL contains search params
+    docsPage.verifySearchResults(query);
 
-    // Step 4: Verify search functionality exists
-    docsPage.assertSearchExists();
-
-    // Step 5: Verify navigation links to key documentation areas
-    docsPage.developmentLink.should('exist');
-
-    // Step 6: Verify footer with community links
-    docsPage.githubLink.should('exist');
+    // Click the first result and verify the search dialog closes
+    docsPage.clickFirstResultAndVerifyPage();
   });
 });

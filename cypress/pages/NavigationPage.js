@@ -4,19 +4,11 @@
 
 class NavigationPage {
   // ---- Selectors ----
-  get header()       { return cy.get('header'); }
   get productsLink() { return cy.get('header').contains('Products'); }
   get mainMenu()     { return cy.get('#main-menu'); }
 
   voiceApiLink() {
     return cy.get('header a[href*="/products/voice-api"]').first();
-  }
-
-  hamburgerButton() {
-    // The hamburger is outside #main-menu; look for aria-label or aria-expanded
-    return cy.get(
-      'header button[aria-label*="enu"], header button[aria-label*="menu"], header button[aria-expanded]'
-    ).filter(':visible').first();
   }
 
   // ---- Actions ----
@@ -28,11 +20,6 @@ class NavigationPage {
 
   hoverProducts() {
     this.productsLink.trigger('mouseover');
-    return this;
-  }
-
-  clickVoiceApi() {
-    this.voiceApiLink().should('exist').click({ force: true });
     return this;
   }
 

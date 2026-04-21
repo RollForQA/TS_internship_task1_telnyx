@@ -1,5 +1,11 @@
 import portalAuthPage from '../pages/PortalAuthPage';
 
+const PORTAL = {
+  expiredToken: 'expired-token',
+  testEmail: 'qa@example.com',
+  loginRoute: '#/login/sign-in',
+};
+
 describe('Telnyx_more - Portal Security and Access Control', () => {
   before(() => {
     cy.assertSiteIsUp('https://portal.telnyx.com');
@@ -9,11 +15,11 @@ describe('Telnyx_more - Portal Security and Access Control', () => {
     // Step 1: Navigate to a protected page with an expired/fake auth token
     portalAuthPage.visitProtectedHash('/app/billing', {
       onBeforeLoad(win) {
-        win.localStorage.setItem('authToken', 'expired-token');
-        win.localStorage.setItem('accessToken', 'expired-token');
-        win.localStorage.setItem('customerLoginId', 'qa@example.com');
-        win.sessionStorage.setItem('authToken', 'expired-token');
-        win.document.cookie = 'authToken=expired-token';
+        win.localStorage.setItem('authToken', PORTAL.expiredToken);
+        win.localStorage.setItem('accessToken', PORTAL.expiredToken);
+        win.localStorage.setItem('customerLoginId', PORTAL.testEmail);
+        win.sessionStorage.setItem('authToken', PORTAL.expiredToken);
+        win.document.cookie = `authToken=${PORTAL.expiredToken}`;
       },
     });
 
@@ -21,8 +27,10 @@ describe('Telnyx_more - Portal Security and Access Control', () => {
     portalAuthPage.assertLoginScreenVisible();
 
     // Step 3: Verify the URL contains the login path
-    cy.url().should('include', '#/login/sign-in');
-    cy.url().should('satisfy', (url) => url.includes('billing') || url.includes('login'));
+    cy.url().should('include', PORTAL.loginRoute);
+
+    // Step 4: Verify billing content is not exposed
+    cy.get('body').should('not.contain.text', 'Billing');
   });
 
   it('TC-14: Unauthenticated direct link access is blocked', { tags: '@smoke' }, () => {
@@ -38,7 +46,6 @@ describe('Telnyx_more - Portal Security and Access Control', () => {
     portalAuthPage.assertLoginScreenVisible();
 
     // Step 3: Verify the URL contains the login path
-    cy.url().should('include', '#/login/sign-in');
-    cy.url().should('satisfy', (url) => url.includes('keys') || url.includes('login'));
+    cy.url().should('include', PORTAL.loginRoute);
   });
 });

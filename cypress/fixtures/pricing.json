@@ -1,0 +1,16 @@
+{
+  "messaging": {
+    "defaultCountry": "United States",
+    "defaultPrice": "$0.004 per message part +",
+    "alternateCountry": "United Kingdom",
+    "alternatePrice": "$0.055 per message part",
+    "rowLabel": "Send outbound messages"
+  },
+  "elasticSip": {
+    "defaultCurrency": "USD",
+    "defaultSymbol": "$",
+    "alternateCurrency": "EUR",
+    "alternateSymbol": "€",
+    "rowLabel": "International calls"
+  }
+}

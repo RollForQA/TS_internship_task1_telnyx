@@ -3,6 +3,7 @@ node_modules
 cypress/screenshots
 cypress/videos
 cypress/reports
+cypress_out*.txt
 .DS_Store
 TC_Telnyx_TestPlan.md
 read_tc.js

@@ -11,7 +11,7 @@ export function assertFocusIndicator() {
   cy.focused().then(($el) => {
     const win = $el[0].ownerDocument.defaultView;
     const styles = win.getComputedStyle($el[0]);
-    const hasOutline = styles.outlineStyle !== 'none' && styles.outlineWidth !== '0px';
+    const hasOutline = styles.outlineStyle !== 'none' && parseFloat(styles.outlineWidth) > 0;
     const hasShadow = styles.boxShadow && styles.boxShadow !== 'none';
     const hasRingClass = ($el.attr('class') || '').toLowerCase().includes('focus');
 

@@ -23,10 +23,8 @@ describe('Telnyx_more - Accessibility and Timed Feedback', () => {
 
         expect(focusable.length, 'focusable sign-up controls').to.be.gte(2);
 
-        // Step 3: Tab through focusable elements and verify focus indicators
-        focusNextElement(focusable, 0);
-        if (focusable.length > 1) focusNextElement(focusable, 1);
-        if (focusable.length > 2) focusNextElement(focusable, 2);
+        // Step 3: Tab through all focusable elements and verify focus indicators
+        focusable.forEach((_, i) => focusNextElement(focusable, i));
       });
 
     // Step 4: Submit the form via keyboard (Enter on submit button)
@@ -40,17 +38,21 @@ describe('Telnyx_more - Accessibility and Timed Feedback', () => {
           .first()
           .focus()
           .should('be.focused')
-          .trigger('keydown', { key: 'Enter', code: 'Enter', which: 13, keyCode: 13 });
+          .trigger('keydown', { key: 'Enter', code: 'Enter' });
       });
 
     // Step 5: Verify user stays on /sign-up (form not submitted with invalid data)
-    cy.url().should('include', '/sign-up');
+    cy.url().should('match', /\/sign-up$/);
   });
 
+  // NOTE: TC-16 is a mock/unit-style test that validates timer-based UI behavior
+  // in isolation (about:blank + injected HTML). It does not test the real Telnyx site.
+  // Consider migrating to a component test if Cypress Component Testing is adopted.
   it('TC-16: Copy confirmation disappears using mocked time', { tags: '@regression' }, () => {
     // Step 1: Create a minimal page with a copy button and a toast notification
     cy.visit('about:blank');
     cy.document().then((doc) => {
+      doc.open();
       doc.write(`
         <html>
           <body>

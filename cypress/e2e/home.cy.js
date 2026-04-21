@@ -21,7 +21,8 @@ describe('Home Page and General Tests', () => {
     homePage.metaDescription
       .should('have.attr', 'content')
       .and('not.be.empty')
-      .and('have.length.greaterThan', 20);
+      .and('have.length.greaterThan', 20)
+      .and('match', /\w{5,}/);
   });
 
   it('TC-07: Cookie Consent Banner', { tags: '@smoke' }, () => {

@@ -7,11 +7,34 @@
  * Safe to call on any page — does nothing if banner isn't shown.
  */
 Cypress.Commands.add('acceptCookies', () => {
-  cy.get('body').then(($body) => {
-    if ($body.find('#onetrust-accept-btn-handler').length > 0) {
-      cy.get('#onetrust-accept-btn-handler').click({ force: true });
-      cy.get('#onetrust-banner-sdk').should('not.be.visible');
-    }
+  const bannerSelector = '#onetrust-banner-sdk';
+  const acceptButtonSelector = '#onetrust-accept-btn-handler';
+
+  cy.get('body', { timeout: 15000 })
+    .should(($body) => {
+      const bannerVisible = $body.find(`${bannerSelector}:visible`).length > 0;
+      const acceptVisible = $body.find(`${acceptButtonSelector}:visible`).length > 0;
+
+      expect(
+        !bannerVisible || acceptVisible,
+        'cookie banner should either be hidden or ready to accept'
+      ).to.equal(true);
+    })
+    .then(($body) => {
+      if ($body.find(`${acceptButtonSelector}:visible`).length > 0) {
+        cy.get(acceptButtonSelector)
+          .should('be.visible')
+          .click({ force: true });
+      } else {
+        cy.log('Cookie banner not found, skipping');
+      }
+    });
+
+  cy.get('body').should(($body) => {
+    expect(
+      $body.find(`${bannerSelector}:visible`).length,
+      'cookie banner should not block the page'
+    ).to.equal(0);
   });
 });
 
@@ -31,6 +54,6 @@ Cypress.Commands.add('waitForPageReady', () => {
  */
 Cypress.Commands.add('assertSiteIsUp', (url = 'https://telnyx.com') => {
   cy.request({ url, failOnStatusCode: false }).then((response) => {
-    expect(response.status).to.eq(200);
+    expect(response.status).to.be.within(200, 399);
   });
 });

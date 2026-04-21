@@ -24,7 +24,7 @@ class AuthPage {
   }
 
   submitSignUpForm() {
-    this.signUpSubmitBtn.click({ force: true });
+    this.signUpSubmitBtn.click();
     return this;
   }
 
@@ -34,23 +34,10 @@ class AuthPage {
    * 2. HTML5 :invalid pseudo-class
    */
   assertSignUpValidationError() {
-    // Should stay on sign-up page
     cy.url().should('include', '/sign-up');
-
-    cy.get('body').then(($body) => {
-      const bodyText = $body.text().toLowerCase();
-      const errorPatterns = [
-        'valid email', 'email is invalid', 'invalid email',
-        'enter a valid', 'email format', 'please enter'
-      ];
-      const hasError = errorPatterns.some((p) => bodyText.includes(p));
-
-      if (!hasError) {
-        // Fallback to HTML5 validation
-        this.signUpEmailInput.then(($input) => {
-          expect($input[0].checkValidity()).to.be.false;
-        });
-      }
+    // HTML5 constraint validation must reject the invalid email
+    this.signUpEmailInput.then(($input) => {
+      expect($input[0].checkValidity(), 'Email input should be invalid').to.be.false;
     });
     return this;
   }

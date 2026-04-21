@@ -9,6 +9,10 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,7 +29,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
+          browser: ${{ matrix.browser }}
           config-file: cypress.config.custom.js
           record: true
         env:
@@ -42,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mochawesome-report
+          name: mochawesome-report-${{ matrix.browser }}
           path: cypress/reports/html
           if-no-files-found: ignore
 
@@ -50,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{ matrix.browser }}
           path: cypress/screenshots
           if-no-files-found: ignore
 
@@ -58,6 +62,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos
+          name: cypress-videos-${{ matrix.browser }}
           path: cypress/videos
           if-no-files-found: ignore

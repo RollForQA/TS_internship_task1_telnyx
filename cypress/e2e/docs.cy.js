@@ -5,7 +5,7 @@ describe('Developer Documentation Tests', () => {
     cy.assertSiteIsUp('https://developers.telnyx.com');
   });
 
-  it('TC-09: Search the Developer Portal', { tags: '@regression' }, () => {
+  it('TC-09: Developer Portal Search', { tags: '@regression' }, () => {
     const query = 'Send a message';
 
     // Step 1: Navigate to developer documentation

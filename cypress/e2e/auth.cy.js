@@ -1,4 +1,5 @@
 import authPage from '../pages/AuthPage';
+import portalPage from '../pages/PortalPage';
 
 describe('Authentication Tests', () => {
   before(() => {
@@ -18,39 +19,22 @@ describe('Authentication Tests', () => {
     // Step 4: Attempt to submit the form
     authPage.submitSignUpForm();
 
-    // Step 5: Verify validation error — text message or HTML5 constraint
+    // Step 5: Verify validation error and user stays on sign-up page
     authPage.assertSignUpValidationError();
   });
 
   it('TC-04: Log In Empty Submit', { tags: '@regression' }, () => {
     // Step 1: Navigate to portal login page
-    // cy.visit() with a full URL handles cross-origin navigation in Cypress 15
-    cy.visit('https://portal.telnyx.com/');
+    portalPage.visit();
 
     // Step 2: Wait for the login form to render (SPA)
-    cy.get('input[type="email"], input[name="email"], input[placeholder*="mail"]', { timeout: 15000 })
-      .first()
-      .should('be.visible');
+    portalPage.emailInput.should('be.visible');
 
     // Step 3: Without entering anything, click the submit/sign-in button
-    cy.get('button[type="submit"], button[type="button"]')
-      .filter(':visible')
-      .contains(/sign.?in|log.?in|send.*link|submit/i)
-      .first()
-      .click({ force: true });
+    portalPage.submitButton.click({ force: true });
 
-    // Step 4: Verify error message or validation appears
-    cy.get('body').then(($body) => {
-      const bodyText = $body.text().toLowerCase();
-      const errorPatterns = ['required', 'enter', 'invalid', 'email'];
-      const hasError = errorPatterns.some((p) => bodyText.includes(p));
-
-      if (!hasError) {
-        // At minimum, we should still be on the login page
-        cy.url().should('include', 'portal.telnyx.com');
-      } else {
-        expect(hasError).to.be.true;
-      }
-    });
+    // Step 4: Verify user stays on login page and validation fires
+    portalPage.assertOnLoginPage();
+    portalPage.assertValidationError();
   });
 });

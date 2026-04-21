@@ -49,16 +49,15 @@ class TelnyxResponsivePage {
    * Uses the same resilient approach as the main project's NavigationPage.
    */
   openAndAssertMobileMenu() {
-    // Try aria-based selector first, fallback to last visible header button
     cy.get('body').then(($body) => {
       const ariaBtn = $body.find(
         'header button[aria-label*="enu"], header button[aria-label*="menu"], header button[aria-expanded]'
       ).filter(':visible');
 
       if (ariaBtn.length > 0) {
-        cy.wrap(ariaBtn.first()).click({ force: true });
+        cy.wrap(ariaBtn.first()).click();
       } else {
-        cy.get('header').find('button:visible').last().click({ force: true });
+        throw new Error('Mobile menu button not found — no button with aria-label or aria-expanded in header');
       }
     });
 
@@ -75,9 +74,10 @@ class TelnyxResponsivePage {
   // ---- Assertions ----
   assertNoHorizontalScroll() {
     cy.window().then((win) => {
-      const initialX = win.scrollX;
-      win.scrollTo(9999, 0);
-      expect(win.scrollX, 'page should not scroll horizontally').to.equal(initialX);
+      win.scrollTo(win.document.body.scrollWidth, 0);
+    });
+    cy.window().then((win) => {
+      expect(win.document.body.scrollWidth, 'no horizontal overflow').to.be.lte(win.innerWidth);
     });
     return this;
   }

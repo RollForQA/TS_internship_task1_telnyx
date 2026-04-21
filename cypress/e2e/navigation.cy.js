@@ -6,19 +6,23 @@ describe('Navigation and Responsiveness Tests', () => {
   });
 
   it('TC-02: Products Menu Navigation', { tags: '@smoke' }, () => {
+    cy.viewport(1440, 900);
+
     navPage.visit();
     cy.acceptCookies();
+    cy.get('body').should(($body) => {
+      expect($body.find('#onetrust-banner-sdk:visible').length, 'cookie banner should not block the page').to.equal(0);
+    });
 
-    // Step 1: Locate "Products" in the header navigation
-    navPage.productsLink.should('be.visible');
+    // Step 1: Locate the desktop "Products" menu trigger
+    navPage.productsTrigger.should('be.visible');
+    cy.acceptCookies();
 
-    // Step 2: Hover over "Products" to open the dropdown menu
-    navPage.hoverProducts();
+    // Step 2: Open the Products menu and wait for Voice API to appear
+    navPage.openProductsMenu();
 
     // Step 3: Click "Voice API" link from dropdown
-    navPage.voiceApiLink()
-      .should('exist', { timeout: 5000 })
-      .click({ force: true });
+    navPage.voiceApiLink.click();
 
     // Step 4: Verify navigation to Voice API page
     cy.url().should('include', '/products/voice-api');
@@ -29,11 +33,8 @@ describe('Navigation and Responsiveness Tests', () => {
     cy.viewport(375, 812);
     navPage.visit();
 
-    // Step 2: Dismiss cookie banner — explicit wait for full removal
-    cy.get('#onetrust-accept-btn-handler', { timeout: 15000 })
-      .should('exist')
-      .click({ force: true });
-    cy.get('#onetrust-banner-sdk', { timeout: 10000 }).should('not.be.visible');
+    // Step 2: Dismiss cookie banner
+    cy.acceptCookies();
 
     // Step 3: Open the hamburger mobile menu
     navPage.openMobileMenu();

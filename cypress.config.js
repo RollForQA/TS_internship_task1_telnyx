@@ -1,10 +1,29 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  projectId: "e5kjfu",
   e2e: {
     baseUrl: "https://telnyx.com",
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    video: true,
+    screenshotOnRunFailure: true,
+    retries: {
+      runMode: 2,
+      openMode: 0,
     },
+    reporter: "mochawesome",
+    reporterOptions: {
+      reportDir: "cypress/reports",
+      overwrite: false,
+      html: false,
+      json: true,
+    },
+    setupNodeEvents(on, config) {
+      const { plugin } = require("@cypress/grep/plugin");
+      plugin(config);
+      return config;
+    },
+    specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
   },
 });

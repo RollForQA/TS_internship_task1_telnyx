@@ -5,14 +5,14 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "cy:open": "node_modules\\.bin\\cypress.cmd open --config-file cypress.config.js",
-    "cy:run": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome",
-    "cy:run:smoke": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome --env grepTags=@smoke",
-    "cy:run:regression": "node_modules\\.bin\\cypress.cmd run --config-file cypress.config.js --browser chrome --env grepTags=@regression",
-    "report:merge": "node_modules\\.bin\\mochawesome-merge.cmd cypress/reports/mochawesome*.json -o cypress/reports/merged.json",
-    "report:generate": "node_modules\\.bin\\marge.cmd cypress/reports/merged.json -f report -o cypress/reports/html",
+    "cy:open": "npx cypress open --config-file cypress.config.js",
+    "cy:run": "npx cypress run --config-file cypress.config.js --browser chrome",
+    "cy:run:smoke": "npx cypress run --config-file cypress.config.js --browser chrome --env grepTags=@smoke",
+    "cy:run:regression": "npx cypress run --config-file cypress.config.js --browser chrome --env grepTags=@regression",
+    "report:merge": "npx mochawesome-merge cypress/reports/mochawesome*.json -o cypress/reports/merged.json",
+    "report:generate": "npx marge cypress/reports/merged.json -f report -o cypress/reports/html",
     "report": "npm run report:merge && npm run report:generate",
-    "test": "cypress run --config-file cypress.config.js --browser chrome"
+    "test": "npx cypress run --config-file cypress.config.js --browser chrome"
   },
   "devDependencies": {
     "@cypress/grep": "^6.0.0",

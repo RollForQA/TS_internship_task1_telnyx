@@ -4,7 +4,7 @@
 
 class PricingPage {
   // ---- Selectors ----
-  get pageHeading() { return cy.get('h1, h2').first(); }
+  get pageHeading() { return cy.get('main h1').first(); }
   get payAsYouGo() { return cy.contains('Pay as you go'); }
   get volumeBased() { return cy.contains('Volume-based'); }
   get countryFilter() { return cy.get('#country-filter'); }
@@ -44,10 +44,12 @@ class PricingPage {
   }
 
   priceValueFor(label) {
+    // Traverses: label span → parent grid row → last visible child div (price cell)
     return cy.contains('span', label)
       .closest('div.grid')
-      .find('div.bg-transparent')
-      .first();
+      .find('div[class]')
+      .filter(':visible')
+      .last();
   }
 
   assertPricingRowContains(label, expectedText) {

@@ -1,5 +1,14 @@
 import telnyxPage from '../pages/TelnyxResponsivePage';
 
+const VIEWPORTS = {
+  mobile: [390, 844],
+  tablet: [768, 1024],
+  laptop: [1024, 768],
+  desktop: [1440, 900],
+  wide: [1920, 1080],
+  hd: [1280, 720],
+};
+
 describe('Telnyx_more - Responsive UI Components', () => {
   before(() => {
     cy.assertSiteIsUp('https://telnyx.com');
@@ -20,7 +29,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
 
   it('TC-RESP-009 Mobile Menu Functionality', { tags: '@regression' }, () => {
     // Step 1: Set mobile viewport and navigate
-    cy.viewport(390, 844);
+    cy.viewport(...VIEWPORTS.mobile);
     telnyxPage.visitHome();
     telnyxPage.acceptCookiesIfPresent();
 
@@ -30,12 +39,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-010 Header And Navigation Stability', { tags: '@regression' }, () => {
-    [
-      [390, 844],
-      [768, 1024],
-      [1024, 768],
-      [1440, 900],
-    ].forEach(([width, height]) => {
+    [VIEWPORTS.mobile, VIEWPORTS.tablet, VIEWPORTS.laptop, VIEWPORTS.desktop].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
@@ -51,12 +55,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-011 Hero Section Responsiveness', { tags: '@regression' }, () => {
-    [
-      [390, 844],
-      [768, 1024],
-      [1024, 768],
-      [1920, 1080],
-    ].forEach(([width, height]) => {
+    [VIEWPORTS.mobile, VIEWPORTS.tablet, VIEWPORTS.laptop, VIEWPORTS.wide].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
@@ -69,12 +68,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-012 Content Cards And Grids', { tags: '@regression' }, () => {
-    [
-      [390, 844],
-      [768, 1024],
-      [1024, 768],
-      [1280, 720],
-    ].forEach(([width, height]) => {
+    [VIEWPORTS.mobile, VIEWPORTS.tablet, VIEWPORTS.laptop, VIEWPORTS.hd].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
@@ -89,26 +83,18 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-013 Logo Strip / Marquee', { tags: '@regression' }, () => {
-    [
-      [390, 844],
-      [1024, 768],
-      [1920, 1080],
-    ].forEach(([width, height]) => {
+    [VIEWPORTS.mobile, VIEWPORTS.laptop, VIEWPORTS.wide].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
       telnyxPage.acceptCookiesIfPresent();
 
-      // Step 2: Verify logo strip or fallback content is visible
-      cy.get('main').then(($main) => {
-        const marqueeCandidate = $main.find('[class*="marquee"], [class*="logo"], [aria-label*="logo"]').filter(':visible');
-
-        if (marqueeCandidate.length) {
-          cy.wrap(marqueeCandidate.first()).should('be.visible');
-        } else {
-          telnyxPage.visibleCardsOrGridItems().its('length').should('be.gte', 1);
-        }
-      });
+      // Step 2: Verify logo strip is visible (selector covers common marquee/logo-strip patterns)
+      cy.get('main')
+        .find('[class*="marquee"], [class*="logo-strip"], [class*="logoStrip"], [aria-label*="logo"]')
+        .filter(':visible')
+        .first()
+        .should('be.visible');
 
       // Step 3: Verify no horizontal overflow
       telnyxPage.assertNoHorizontalScroll();
@@ -116,11 +102,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-014 Footer Responsiveness', { tags: '@regression' }, () => {
-    [
-      [390, 844],
-      [768, 1024],
-      [1280, 720],
-    ].forEach(([width, height]) => {
+    [VIEWPORTS.mobile, VIEWPORTS.tablet, VIEWPORTS.hd].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
@@ -133,13 +115,7 @@ describe('Telnyx_more - Responsive UI Components', () => {
   });
 
   it('TC-RESP-015 No Horizontal Scroll', { tags: '@regression' }, () => {
-    [
-      [360, 800],
-      [390, 844],
-      [414, 896],
-      [768, 1024],
-      [1024, 768],
-    ].forEach(([width, height]) => {
+    [[360, 800], VIEWPORTS.mobile, [414, 896], VIEWPORTS.tablet, VIEWPORTS.laptop].forEach(([width, height]) => {
       // Step 1: Set viewport and navigate
       cy.viewport(width, height);
       telnyxPage.visitHome();
